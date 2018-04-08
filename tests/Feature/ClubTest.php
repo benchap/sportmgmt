@@ -5,21 +5,35 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
+
 class ClubTest extends TestCase
 {
     use DatabaseMigrations;
 
-    public function setUp(){
-        parent::setUp();
-        $this->club = factory('App\Club')->create();
-    }
     /**  @test */
     public function a_user_can_browse_clubs()
     {
-        $this->get('/clubs')                        # check club results page
-            ->assertSee($this->club->name);
+        
+        $club = factory('App\Club')->create();
 
-        $this->get('/clubs/' . $this->club->id)     # check club view page
-            ->assertSee($this->club->name);
+    }
+
+    /** @test */
+    public function an_authenticated_user_can_create_a_club()
+    {
+        // create a new user and sign in using actingAs()
+        $this->signIn();  
+
+        // Make a club object
+        $club = factory('App\Club')->make();
+
+        // Hit the create club endpoint passing the club as parameters
+        $response = $this->post('/clubs', $club->toArray());
+            
+        // The post redirects to club index on success.
+        // Get redirect page and check that club name exists
+        $this->get($response->headers->get('Location'))
+            ->assertSee($club->name);
+
     }
 }

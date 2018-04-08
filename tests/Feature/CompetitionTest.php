@@ -9,29 +9,29 @@ class CompetitionTest extends TestCase
 {
     use DatabaseMigrations;
 
-    public function setUp(){
-    	parent::setUp();										# Create Competition instance here once.
-    	$this->comp = factory('App\Competition')->create();			
+    /** @test */
+    public function an_authenticated_user_can_create_a_competition()
+    {
+
+        // sign in as user
+        $this->signIn();
+
+        // Create a competition object
+        $comp = factory('App\Competition')->make();
+
+        // Send a post request to the create page
+        $response = $this->post('/competitions',$comp->toArray());
+
+        // Get the redirected url (competitions view page) and check that the comp name exists
+        $this->get($response->headers->get('Location'))
+            ->assertSee($comp->name);
+            //->assertSee($comp->shortname)       // chain these commands
+
     }
 
-    /**  @test */
-    public function a_user_can_browse_competitions()
+    public function a_guest_cannot_create_a_competition()
     {
-        $this->get('/competitions')								# retrieve a list of all competitions
-        	->assertSee($this->comp->name);						# check that the name exists
 
-        $this->get('/competitions/' . $this->comp->id)			# retreive a view competition page
-     		->assertSee($this->comp->name);						# check that the name is exists on the page
-    }
-
-    /**  @test */
-    public function a_user_can_see_teams_within_a_competition()
-    {
-        
-      	$club = factory('App\Teams')->create(['competition_id' => $this->comp->id]);
-
-      	$this->get('/competitions/' . $this->comp->id)
-      		->assertSee($club->name);
     }
 
 }

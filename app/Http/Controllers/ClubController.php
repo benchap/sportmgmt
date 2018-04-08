@@ -25,7 +25,7 @@ class ClubController extends Controller
      */
     public function create()
     {
-        //
+        return view('clubs.create');
     }
 
     /**
@@ -36,7 +36,30 @@ class ClubController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validate the inpit
+        $this->validate($request,[
+            'name' => 'required',
+            'address1' => 'required',
+            'suburb' => 'required',
+            'state' => 'required',
+            'postcode' => 'required',
+            'country' => 'required'
+        ]);
+
+        // Create the Club object 
+        $club = Club::create([
+            'name' => request('name'),
+            'address1' => request('address1'),
+            'address2' => request('address2') || '',
+            'suburb' => request('suburb'),
+            'state' => request('state'),
+            'postcode' => request('postcode'),
+            'country' => request('country'),
+        ]);
+
+        return redirect('/clubs');
+
+        // Redirect to Club page
     }
 
     /**

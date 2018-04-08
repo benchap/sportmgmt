@@ -10,7 +10,7 @@
                 <div class="panel-body">
                     @foreach ($competitions as $comp)
                     <article>
-                        <h4>{{ $comp->name }}</h4>
+                        <h4><a href="/competitions/{{$comp->id}}">{{ $comp->name }}</a></h4>
                     </article>
                     @endforeach
                 </div>

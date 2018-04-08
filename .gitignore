@@ -2,6 +2,7 @@
 /public/hot
 /public/storage
 /storage/*.key
+/public/images/*
 /vendor
 /.idea
 /.vagrant
@@ -11,8 +12,6 @@ npm-debug.log
 yarn-error.log
 .env
 .env.example
-
-
 
 /build/logs
 /build/coverage

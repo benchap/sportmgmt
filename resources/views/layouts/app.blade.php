@@ -12,6 +12,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    @yield('head')
 </head>
 <body>
     <div id="app">
@@ -29,15 +30,24 @@
 
                     <!-- Branding Image -->
                     <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Laravel') }}
+                        {{ config('app.name', 'Sportal') }}
                     </a>
                 </div>
 
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
-                        &nbsp;
+                        <li class="nav-item">
+                            <a class="nav-link" href="/competitions">Competitions</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/clubs">Clubs</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/teams">Teams</a>
+                        </li>      
                     </ul>
+
 
                     <!-- Right Side Of Navbar -->
                     <ul class="nav navbar-nav navbar-right">
@@ -76,5 +86,7 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
+    @yield('footer')
+    
 </body>
 </html>

@@ -9,18 +9,23 @@ class TeamTest extends TestCase
 {
     use DatabaseMigrations;
 
-    public function setUp(){
-        parent::setUp();
-        $this->team = factory('App\Teams')->create();
-    }
-
-    
+    /** @test */
     public function a_user_can_browse_teams()
     {
-        $this->get('/teams')                        # check club results page
-            ->assertSee($this->team->name);
 
-        //$this->get('/teams/' . $this->team->id)     # check club view page
-        //    ->assertSee($this->team->name);
+    }
+
+    /** @test */
+    public function an_authenticated_user_can_create_teams()
+    {
+    	$this->signIn();
+
+    	$team = factory('App\Teams')->make();
+
+//    	$response = $this->post('/teams',$team->toArray());
+
+    	//$this->get($response->headers->get('Location'))
+    	//	->assertSee($team->name);
+
     }
 }

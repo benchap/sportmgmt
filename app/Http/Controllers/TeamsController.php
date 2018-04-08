@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Teams;
+use App\Competition;
 use Illuminate\Http\Request;
 
 class TeamsController extends Controller
@@ -25,7 +26,7 @@ class TeamsController extends Controller
      */
     public function create()
     {
-        //
+        return view('teams.create');
     }
 
     /**
@@ -34,9 +35,24 @@ class TeamsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, Competition $competition)
     {
-        //
+
+        $this->validate($request,[
+                'name' => 'required',
+        ]);
+
+        // Create the team object
+        $teams = Teams::create([
+            'name' => request('name'),
+            'competition_id' => $competition->id,
+            'club_id' => 0,                             // change database to be default 0
+        ]);
+
+        return back();                                  // used to create teams from the /admin section  
+        // redirect
+        //return redirect('/teams');                    // used to create teams from club page
+                        
     }
 
     /**
@@ -47,7 +63,7 @@ class TeamsController extends Controller
      */
     public function show(Teams $teams)
     {
-        //
+        return view('teams.show', compact('teams'));
     }
 
     /**
@@ -58,7 +74,7 @@ class TeamsController extends Controller
      */
     public function edit(Teams $teams)
     {
-        //
+        return view('teams.edit', compact('teams'));
     }
 
     /**
@@ -70,7 +86,29 @@ class TeamsController extends Controller
      */
     public function update(Request $request, Teams $teams)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+        ]);
+
+        $input['imagename'] = '';
+        // Upload image if the user has provided one
+        if($request->hasFile('logo'))
+        {
+            $image = $request->file('logo');
+            $input['imagename'] = time().'.'.$image->getClientOriginalExtension();  
+            $destinationPath = public_path('/images');
+            $image->move($destinationPath, $input['imagename']);
+            //$this->postImage->add($input);
+        }
+    
+        $teams->update([
+            //'user_id' => auth()->id(),              // created by user
+            'name' => request('name'),
+            'logo' => $input['imagename'] ? $input['imagename'] : $teams->logo,
+        ]);
+
+        return redirect('/teams/' . $teams->id)->with('success','Team successfully updated');
     }
 
     /**
