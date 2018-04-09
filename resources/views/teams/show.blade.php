@@ -9,7 +9,7 @@
                 <div class="panel-body">
                     <p>Logo: </p>
                     @if($teams->logo)
-                        <img width='100' src='/images/{{ $teams->logo }}'> 
+                        <img width='100' src='{{ $teams->logo }}'> 
                     @endif
                     <p>
                         <br />

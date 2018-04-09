@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Teams;
 use App\Competition;
+use App\Image;
+use App\Jobs\ProcessImageThumbnail;
 use Illuminate\Http\Request;
 
 class TeamsController extends Controller
@@ -96,16 +98,21 @@ class TeamsController extends Controller
         if($request->hasFile('logo'))
         {
             $image = $request->file('logo');
-            $input['imagename'] = time().'.'.$image->getClientOriginalExtension();  
+            $name = time();
+            $input['imagename'] = $name.'.'.$image->getClientOriginalExtension();  
+            $input['thumbname'] = $name.'_thumb.'.$image->getClientOriginalExtension();  
             $destinationPath = public_path('/images');
             $image->move($destinationPath, $input['imagename']);
-            //$this->postImage->add($input);
+           // dd(public_path()."/images/".$input['imagename']);
+
+            // defer the processing of the image thumbnails
+            ProcessImageThumbnail::dispatch(public_path()."/images/".$input['imagename'],public_path()."/images/".$input['thumbname'] );
         }
     
         $teams->update([
             //'user_id' => auth()->id(),              // created by user
             'name' => request('name'),
-            'logo' => $input['imagename'] ? $input['imagename'] : $teams->logo,
+            'logo' => $input['imagename'] ? '/images/'.$input['imagename'] : $teams->logo,
         ]);
 
         return redirect('/teams/' . $teams->id)->with('success','Team successfully updated');
