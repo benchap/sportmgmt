@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 
 class CompetitionController extends Controller
 {
+    public function __construct()
+    {
+         $this->middleware('auth')->except(['index','show']);       // will protect any new functions
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -25,7 +30,11 @@ class CompetitionController extends Controller
      */
     public function create()
     {
-        return view('competitions.create');
+        $categories = array("Rounds","Knockout","Mixed");
+        $frequencies = array("Weekly","Monthly","Custom");
+        return view('competitions.create')
+                    ->with(compact('categories'))
+                    ->with(compact('frequencies'));
     }
 
     /**
@@ -36,21 +45,29 @@ class CompetitionController extends Controller
      */
     public function store(Request $request)
     {
+        
         $this->validate($request, [
             'name' => 'required',
             'short_name' => 'required',
             'start_date' => 'required',
+            'end_date' => 'required',
+            'ctype' => 'required',
+            'frequency' => 'required'
             //'channel_id' => 'required|exists:channels,id'
         ]);
+    
 
         // dd will dump $request data (and halt) in phpunit, similar to datadump in perl 
         // dump() will do the same but not halt.
         // dd($request->all());
         $competition = Competition::create([
-            //'user_id' => auth()->id(),              // created by user
+            'user_id' => auth()->id(),              // created by user
             'name' => request('name'),
             'short_name' => request('short_name'),
             'start_date' => request('start_date'),
+            'end_date' => request('end_date'),
+            'frequency' => request('frequency'),
+            'ctype' => request('ctype'),
         ]);
 
         return redirect('/competitions');
@@ -77,7 +94,11 @@ class CompetitionController extends Controller
      */
     public function edit(Competition $competition)
     {
-        return view('competitions.edit', compact('competition'));
+        $categories = array("Rounds","Knockout","Mixed");
+        $frequencies = array("Weekly","Monthly","Custom");
+        return view('competitions.edit', compact('competition'))
+                ->with(compact('categories'))
+                ->with(compact('frequencies'));
     }
 
     /**
@@ -93,6 +114,8 @@ class CompetitionController extends Controller
             'name' => 'required',
             'short_name' => 'required',
             'start_date' => 'required',
+            'ctype' => 'required',
+            'frequency' => 'required'
             //'channel_id' => 'required|exists:channels,id'
         ]);
 
@@ -100,10 +123,12 @@ class CompetitionController extends Controller
         // dump() will do the same but not halt.
         // dd($request->all());
         $competition->update([
-            //'user_id' => auth()->id(),              // created by user
+            'user_id' => auth()->id(),              // created by user
             'name' => request('name'),
             'short_name' => request('short_name'),
             'start_date' => request('start_date'),
+            'ctype' => request('ctype'),
+            'frequency' => request('frequency'),
         ]);
 
         return redirect('/competitions/' . $competition->id);

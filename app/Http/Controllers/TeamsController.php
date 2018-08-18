@@ -46,6 +46,7 @@ class TeamsController extends Controller
 
         // Create the team object
         $teams = Teams::create([
+            'user_id' => auth()->id(),
             'name' => request('name'),
             'competition_id' => $competition->id,
             'club_id' => 0,                             // change database to be default 0

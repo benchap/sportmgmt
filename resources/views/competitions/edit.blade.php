@@ -1,3 +1,4 @@
+
 @extends('layouts.app')
 
 @section('content')
@@ -12,20 +13,62 @@
                         {{ csrf_field() }}
                         {{ method_field('put') }}
                         
-                        <div id="form-group">
-                            <label for='title'>Name:</label> 
-                            <input type='text' class='form-control' id='name' name='name' required value="{{ $competition->name }}">
+                        <div class="form-group row">
+                          <label for="smFormGroupInput" class="col-sm-3 col-form-label col-form-label-sm">Name</label>
+                          <div class="col-sm-9">
+                            <input type="text" class="form-control form-control-sm" id="name" name='name' required value="{{ $competition->name }}">
+                          </div>
                         </div>
 
-                       <div id="form-group">
-                            <label for='body'>Short Name:</label> 
-                            <input type='text' class='form-control' id='short_name' name='short_name' required value="{{ $competition->short_name }}">
+                        <div class="form-group row">
+                          <label for="smFormGroupInput" class="col-sm-3 col-form-label col-form-label-sm">Short Name</label>
+                          <div class="col-sm-9">
+                            <input type="text" class="form-control form-control-sm" id="short_name" name='short_name'required value="{{ $competition->short_name }}">
+                          </div>
                         </div>
 
-                        <div id="form-group">
-                            <label for='body'>Start Date:</label> 
-                            <input type='text' class='form-control' id='start_date' name='start_date' required value="{{ $competition->start_date }}">
+                        <div class="form-group row">
+                          <label for="smFormGroupInput" class="col-sm-3 col-form-label col-form-label-sm">Start Date</label>
+                          <div class="col-sm-3">
+                            <input type="text" class="form-control form-control-sm" id="start_date" name='start_date' required value="{{ $competition->start_date }}">
+                          </div>
+                          <label for="smFormGroupInput" class="col-sm-3 col-form-label col-form-label-sm">End Date</label>
+                          <div class="col-sm-3">
+                            <input type="text" class="form-control form-control-sm" id="end_date" name='end_date' required value="{{ $competition->end_date }}">
+                          </div>
                         </div>
+
+
+                        <div class="form-group row">
+                          <label for="smFormGroupInput" class="col-sm-3 col-form-label col-form-label-sm">Type</label>
+                          <div class="col-sm-9">
+                                <select class="form-control" id="ctype" name='ctype'>
+                               @foreach($categories as $category)
+                                    <option value='{{ $category }}'
+                                    @if ($category==$competition->type) 
+                                        selected 
+                                    @endif 
+                                    > {{ $category }}</option>
+                                @endforeach                               
+                                </select> 
+                          </div>
+                        </div>
+
+                        <div class="form-group row">
+                          <label for="smFormGroupInput" class="col-sm-3 col-form-label col-form-label-sm">Frequency</label>
+                          <div class="col-sm-9">
+                                <select class="form-control" id="frequency" name='frequency'>
+                               @foreach($frequencies as $frequency)
+                                    <option value='{{ $frequency }}'
+                                    @if ($frequency==$competition->frequency) 
+                                        selected 
+                                    @endif 
+                                    > {{ $frequency }}</option>
+                                @endforeach                               
+                                </select> 
+                          </div>
+                        </div>
+
                         <div id='form-group'>
                             <br /><button type='submit' class='btn btn-primary'>Edit</button>
                         </div>
@@ -43,6 +86,7 @@
     </div>
 </div>
 @endsection
+
 
 @section('head')
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">

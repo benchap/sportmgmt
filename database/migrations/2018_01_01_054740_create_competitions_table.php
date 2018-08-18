@@ -15,9 +15,13 @@ class CreateCompetitionsTable extends Migration
     {
         Schema::create('competitions', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedInteger('user_id');
             $table->string('name');
             $table->string('short_name');
             $table->date('start_date');
+            $table->date('end_date');
+            $table->string('ctype')->default('');
+            $table->string('frequency')->default('');
             $table->timestamps();
         });
     }

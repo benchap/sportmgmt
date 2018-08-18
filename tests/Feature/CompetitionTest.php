@@ -9,7 +9,8 @@ class CompetitionTest extends TestCase
 {
     use DatabaseMigrations;
 
-    /** @test */
+
+    /** @test **/
     public function an_authenticated_user_can_create_a_competition()
     {
 
@@ -29,9 +30,43 @@ class CompetitionTest extends TestCase
 
     }
 
+    /** @test **/
     public function a_guest_cannot_create_a_competition()
     {
+        $this->withExceptionHandling();
 
+        // Check to see if the guest can access the competitions form
+        $this->get('/competitions/create')
+            ->assertRedirect('/login');
+
+        // Guest shouldnt be able to hit create endpoint 
+        $this->post('/competitions')
+            ->assertRedirect('/login');
     }
 
+
+    /** @test **/   
+    public function a_competition_must_have_a_name()
+    {   
+        $this->withExceptionHandling()->signIn();
+
+        $competition = factory('App\Competition')->make([ 'name' => null ]);
+
+        $this->post('/competitions', $competition->toArray())
+            ->assertSessionHasErrors('name');
+        
+    }
+
+
+/*
+            $this->withExceptionHandling();
+
+        // Unable to view create form
+        $this->get('/threads/create')
+            ->assertRedirect('/login');
+
+        // Unable to create thread
+        $this->post('/threads')
+            ->assertRedirect('/login');
+*/
 }

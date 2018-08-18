@@ -18,14 +18,7 @@ class TeamTest extends TestCase
     /** @test */
     public function an_authenticated_user_can_create_teams()
     {
-    	$this->signIn();
 
-    	$team = factory('App\Teams')->make();
-
-//    	$response = $this->post('/teams',$team->toArray());
-
-    	//$this->get($response->headers->get('Location'))
-    	//	->assertSee($team->name);
 
     }
 }

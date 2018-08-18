@@ -25,6 +25,8 @@ class AddTeamLogos extends Migration
      */
     public function down()
     {
-        $table->dropColumn('logo');
+        Schema::table('teams', function (Blueprint $table) {
+            $table->dropColumn('logo');
+        });
     }
 }

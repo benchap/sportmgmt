@@ -30,10 +30,19 @@ $factory->define(App\Club::class, function (Faker $faker) {
 $factory->define(App\Competition::class, function (Faker $faker) {
     $name = $faker->name;
     $shortname = substr($name,0,4);
+    $start_date =  $faker->dateTimeBetween($startDate = "now", $endDate = "30 days")->format('Y-m-d');
+    $end_date = $faker->dateTimeBetween($startDate = $start_date, $endDate = "90 days")->format('Y-m-d');
+
     return [
+        'user_id' => function(){
+            return factory('App\User')->create()->id;
+        },
         'name' => $name,
         'short_name' => $shortname,
-        'start_date' => $faker->date($format = 'Y-m-d',$startDate = '-1 years', $endDate = 'now'),
+        'start_date' => $start_date,
+        'end_date' => $end_date,
+        'ctype' => 'Rounds',
+        'frequency' => 'Weekly',
     ];
 });
 
@@ -56,6 +65,13 @@ $factory->define(App\User::class, function (Faker $faker) {
         'email' => $faker->unique()->safeEmail,
         'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', // secret
         'remember_token' => str_random(10),
+    ];
+});
+
+$factory->define(App\Membership::class, function (Faker $faker) {
+    return [
+        'name' => $faker->name,
+        'cost' => '13500'
     ];
 });
 

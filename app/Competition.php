@@ -13,8 +13,13 @@ class Competition extends Model
   		return $this->hasMany(Teams::class);
   	}
 
-  	public function addTeam(Teams $team)
+  	public function addTeam($team)
   	{
   		$this->teams()->create($team);
   	}
+
+  	public function creator()
+  	{
+  		return $this->belongsTo(User::class, 'user_id');
+   	}
 }

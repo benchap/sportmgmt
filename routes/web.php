@@ -30,12 +30,23 @@ Route::put('/competitions/{competition}','CompetitionController@update');
 Route::get('/competitions/{competition}', 'CompetitionController@show');	
 Route::post('/competitions','CompetitionController@store');
 
+// PaymentGateway Test
+Route::post('/teams/{teams}/register/{membership}', 'TeamsMembershipController@store')
+	->where(['teams' => '[0-9]+', 'membership' => '[0-9]+']);							// Create membership
+Route::get('/teams/{teams}/register/{membership}','TeamsMembershipController@show')		// View membership
+	->where(['teams' => '[0-9]+', 'membership' => '[0-9]+']);
+
 Route::get('/teams', 'TeamsController@index');
 Route::post('/teams','TeamsController@store');
 Route::get('/teams/create','TeamsController@create');									// Create form
 Route::get('/teams/{teams}','TeamsController@show');
-Route::put('/teams/{teams}','TeamsController@update');				// Update teams + logo upload
+Route::put('/teams/{teams}','TeamsController@update');									// Update teams + logo upload
 Route::get('/teams/{teams}/edit','TeamsController@edit');
 
 Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
+
+	
+
+
+
