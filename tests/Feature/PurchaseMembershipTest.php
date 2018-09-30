@@ -20,7 +20,7 @@ class PurchaseMembershipTest extends TestCase
         //Create a paymentGateway
         $this->paymentGateway = new FakePaymentGateway;
 
-        // Fixes - BindingResolutionException, Laravel needs this linkage.
+        // Fixes - BindingResolutionException, Container needs to know which instance to use.
         $this->app->instance(PaymentGatewayInterface::class, $this->paymentGateway);
 
         $this->team = factory('App\Teams')->create();
@@ -183,17 +183,16 @@ class PurchaseMembershipTest extends TestCase
             'emergency_name' => 'Jane Doe',
             'emergency_phone' => '02 9904 1000',
             'previous_injury' => '',
-            'payment_token' => 'invalid-payment-token',
+            'payment_token' => 'invalid',
             'email' => 'john@doe.com'
         ]);
 
-        dd($response->decodeResponseJson());
-        
-        $response->assertStatus(422)
-                ->assertJsonFragment(['payment_token' => ["The payment token field is required."]]);
+        //dd($response->decodeResponseJson());
+        ///exit;
 
-        // Decodes json response into array
-        dd($response->decodeResponseJson());
+        $response->assertStatus(422)
+                ->assertJson(['errors' => 'A valid payment token is required']);
+
     }
 
     /** @test */
@@ -201,12 +200,12 @@ class PurchaseMembershipTest extends TestCase
     {
         $this->withExceptionHandling()->signIn();
 
-        // Register as a player via a team
+        // Register as a player via a team (TeamsMembershipController)
         $response = $this->orderMembership($this->team,$this->membership, [
             'member_type' => 'player',
-            'payment_token' => 'invalid_payment_token',
+            'payment_token' => 'invalid',
             'user_id' => auth()->id(),
-            'email' => 'john@doe.com',
+            'email' => 'john1@doe.com',
             'firstname' => 'John',
             'lastname' => 'Doe',
             'address' => '1 Victory St',
@@ -224,11 +223,14 @@ class PurchaseMembershipTest extends TestCase
             'previous_injury' => '',
         ]);
 
-        // Unprocessable
+
+        // Should receive 422 status, invalid token
         $response->assertStatus(422);
-        
+    
         // Ensure that a membership wasnt created
-        $order = $this->team->membership_orders->where('email', 'john@doe.com')->first();
-        $this->assertNull($order);
+        // Order is created first regardless of payment. 
+        // Need to check whether pay status is pending. 
+        $order = $this->team->membership_orders->where('email', 'john1@doe.com')->first();
+        $this->assertEquals('pending',$order->pay_status);
     }
 }

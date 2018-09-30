@@ -105,8 +105,9 @@ class TeamsMembershipController extends Controller
         try{
             // Charge card
             $this->paymentGateway->charge($membership->cost, $token);
+        
         }catch(FailedPaymentException $e){
-            return response()->json([], 422);
+            return response()->json(['errors'=>'A valid payment token is required'], 422);
         }
 
         // if successful

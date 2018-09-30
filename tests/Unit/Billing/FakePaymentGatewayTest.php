@@ -47,10 +47,11 @@ class FakePaymentGatewayTest extends TestCase
 		}
 		catch(FailedPaymentException $e)
 		{
+			//$this->assertEquals(2500,$this->failedChargesAmount);    //Add extra assertions if this fails
 			return;
 		}
 
-		#Explicitly fail - the exeception above should be thrown
+		#Explicitly fail - A successful test shouldnt reach this point. It should be caught and returned above.
 		$this->fail();
 
 	}
