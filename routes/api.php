@@ -30,9 +30,18 @@ Route::post('clubs','api\ClubController@store')->name('api.club.store');
 Route::put('clubs/{id}','api\ClubController@store')->name('api.club.update');
 
 // Destroy club
-Route::delete('clubs/{id}','api\ClubController@destroy')->name('api.club.destroy');;
+Route::delete('clubs/{id}','api\ClubController@destroy')->name('api.club.destroy');
 
-// get Teams
-Route::get('teams','api\TeamsController@index')->name('api.teams.index');
+// Teams
+Route::get('teams','api\TeamsController@index')->name('api.teams.index');               // Get Teams
+Route::get('teams/{id}','api\TeamsController@show')->name('apu.teams.show');                 // Show team
+Route::post('teams','api\TeamsController@store')->name('api.teams.store');              // Create Teams
+Route::put('teams/{id}','api\TeamsController@update')->name('api.teams.update');         // Update Teams
+Route::delete('teams/{id}','api\TeamsController@destroy')->name('api.teams.destroy');   // Delete Team
+
+// Comeptitions 
+Route::get('competitions','api\CompetitionController@index')->name('api.competitions.index');
+
+
 
 
