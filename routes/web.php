@@ -15,6 +15,8 @@
 //    return view('welcome');
 //	});
 
+Auth::routes();
+
 Route::get('/clubs', 'ClubController@index');					// display all clubs
 Route::post('/clubs','ClubController@store');					// create new club
 Route::get('/clubs/create', 'ClubController@create');			// display club create form
@@ -43,9 +45,14 @@ Route::get('/teams/{teams}','TeamsController@show');
 Route::put('/teams/{teams}','TeamsController@update');									// Update teams + logo upload
 Route::get('/teams/{teams}/edit','TeamsController@edit');
 
-Auth::routes();
+Route::get('/teams/{teams}/players/create', "PlayersController@create");	 // Create player form
+Route::post('/teams/{teams}/players','PlayersController@store');             // Add player
+Route::get('/teams/{teams}/players/{players}','PlayersController@show');    // View player
+
+
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::resource('players', 'Players');
 	
 
 
