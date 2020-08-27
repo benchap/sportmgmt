@@ -9,7 +9,6 @@ class CompetitionTest extends TestCase
 {
     use DatabaseMigrations;
 
-
     /** @test **/
     public function an_authenticated_user_can_create_a_competition()
     {
