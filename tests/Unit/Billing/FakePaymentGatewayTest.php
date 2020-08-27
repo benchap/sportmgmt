@@ -52,7 +52,7 @@ class FakePaymentGatewayTest extends TestCase
 		}
 
 		#Explicitly fail - A successful test shouldnt reach this point. It should be caught and returned above.
-		$this->fail();
+		$this->fail("Order contained invalid token");
 
 	}
 }
