@@ -23,15 +23,6 @@ class TeamsController extends Controller
         return TeamsResource::collection($teams);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -41,12 +32,16 @@ class TeamsController extends Controller
      */
     public function store(Request $request)
     {
-        $team = $request->isMethod('put')   
-            ? Teams::findOrFail($request->team_id)
-            : new Teams;
+        //$team = $request->isMethod('put')
+        //    ? Teams::findOrFail($request->team_id)
+        //    : new Teams;
+
+        $team = Teams::findOrFail($request->team_id);
+
+        $data = $request->post();
+
         // Retrieve form params
-        $team->id = $request->input('team_id');
-        $team->name = $request->input('name');
+        $team->fill($data);
 
         // Save and return new resource
         if($team->save()){
@@ -73,26 +68,22 @@ class TeamsController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     *  @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        //
+        $data = $request->post();
+
+        $team = Teams::findOrFail($id);
+
+        // This will update team with the fields provided in $data
+        $team->fill($data);
+
+        if($team->save()){
+            return TeamsResource($team);
+        }
+
     }
 
     /**

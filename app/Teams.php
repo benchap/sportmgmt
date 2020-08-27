@@ -25,4 +25,8 @@ class Teams extends Model
     public function memberships(){
     	return $this->hasMany(Membership::class);
     }
+
+    public function players(){
+        return $this->hasMany(Players::class, 'team_id');
+    }
 }

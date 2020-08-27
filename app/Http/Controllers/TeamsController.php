@@ -10,6 +10,12 @@ use Illuminate\Http\Request;
 
 class TeamsController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth')->except(['index','show']);       // will protect any new functions
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -48,7 +54,7 @@ class TeamsController extends Controller
         $teams = Teams::create([
             'user_id' => auth()->id(),
             'name' => request('name'),
-            'competition_id' => $competition->id,
+            'competition_id' => $competition->id ?? 0,
             'club_id' => 0,                             // change database to be default 0
         ]);
 
@@ -99,12 +105,13 @@ class TeamsController extends Controller
         if($request->hasFile('logo'))
         {
             $image = $request->file('logo');
-            $name = time();
+            $name = $teams->id . "_logo_" . date('YmdHis');
+
             $input['imagename'] = $name.'.'.$image->getClientOriginalExtension();  
             $input['thumbname'] = $name.'_thumb.'.$image->getClientOriginalExtension();  
             $destinationPath = public_path('/images');
             $image->move($destinationPath, $input['imagename']);
-           // dd(public_path()."/images/".$input['imagename']);
+        
 
             // defer the processing of the image thumbnails
             ProcessImageThumbnail::dispatch(public_path()."/images/".$input['imagename'],public_path()."/images/".$input['thumbname'] );
